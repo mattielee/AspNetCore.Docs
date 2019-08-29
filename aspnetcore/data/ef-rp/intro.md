@@ -30,6 +30,10 @@ This is the first in a series of tutorials that show how to use Entity Framework
 
 [!INCLUDE[VS Code prereqs](~/includes/net-core-prereqs-vsc-3.0.md)]
 
+# [Visual Studio for Mac](#tab/visual-studio-mac)
+
+[!INCLUDE[VS for Mac prereqs](~/includes/net-core-prereqs-mac-3.0.md)]
+
 ---
 
 ## Database engines
@@ -94,6 +98,29 @@ To run the app after downloading the completed project:
 
 * Run the project to seed the database.
 
+# [Visual Studios for Mac](#tab/visual-studios-mac)
+To run the app after downloading the completed project:
+
+* Delete *ContosoUniversity.csproj*, and rename *ContosoUniversitySQLite.csproj* to *ContosoUniversity.csproj*.
+* Delete *Startup.cs*, and rename *StartupSQLite.cs* to *Startup.cs*.
+* Delete *appSettings.json*, and rename *appSettingsSQLite.json* to *appSettings.json*.
+* Delete the *Migrations* folder, and rename *MigrationsSQL* to *Migrations*.
+* Build the project.
+* At a command prompt in the project folder, run the following commands:
+
+  ```console
+  dotnet tool install --global dotnet-ef --version 3.0.0-*
+  dotnet ef database update
+  ```
+
+* In your SQLite tool, run the following SQL statement:
+
+  ```sql
+  UPDATE Department SET RowVersion = randomblob(8)
+  ```
+
+* Run the project to seed the database.
+
 ---
 
 ## Create the web app project
@@ -115,6 +142,12 @@ To run the app after downloading the completed project:
   dotnet new webapp -o ContosoUniversity
   cd ContosoUniversity
   ```
+# [Visual Studio for Mac](#tab/visual-studio-mac)
+* From the Visual Studio for Mac **File** menu, select **New Solution**.
+* Under **.NET Core**, Select **Web Application**.
+* Set the **Target Framework** to **.NET Core 3.0**
+* Name the solution *ContosoUniversity*. It's important to use this exact name including capitalization, so the namespaces match when code is copied and pasted.
+
 
 ---
 
@@ -255,7 +288,34 @@ The following packages are automatically installed:
   ```console
   dotnet aspnet-codegenerator razorpage -m Student -dc ContosoUniversity.Data.SchoolContext -udl -outDir Pages/Students --referenceScriptLibraries
   ```
+# [Visual Studio for Mac](#tab/visual-studio-mac)
 
+* Run the following .NET Core CLI commands to install required NuGet packages:
+
+  ```console
+  dotnet add package Microsoft.EntityFrameworkCore.SQLite --version 3.0.0-*
+  dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 3.0.0-*
+  dotnet add package Microsoft.EntityFrameworkCore.Design --version 3.0.0-*
+  dotnet add package Microsoft.EntityFrameworkCore.Tools --version 3.0.0-*
+  dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design --version 3.0.0-*
+  dotnet add package Microsoft.Extensions.Logging.Debug --version 3.0.0-*
+  ```
+
+  The Microsoft.VisualStudio.Web.CodeGeneration.Design package is required for scaffolding. Although the app won't use SQL Server, the scaffolding tool needs the SQL Server package.
+
+* Create a *Pages/Students* folder.
+
+* Run the following command to install the [aspnet-codegenerator scaffolding tool](xref:fundamentals/tools/dotnet-aspnet-codegenerator).
+
+  ```console
+  dotnet tool install --global dotnet-aspnet-codegenerator --version 3.0.0-*
+  ```
+
+* Run the following command to scaffold Student pages.
+  ```console
+  dotnet aspnet-codegenerator razorpage -m Student -dc ContosoUniversity.Data.SchoolContext -udl -outDir Pages/Students --referenceScriptLibraries
+  ```
+  
 ---
 
 If you have a problem with the preceding step, build the project and retry the scaffold step.
@@ -283,6 +343,12 @@ The connection string specifies [SQL Server LocalDB](/sql/database-engine/config
 LocalDB is a lightweight version of the SQL Server Express Database Engine and is intended for app development, not production use. By default, LocalDB creates *.mdf* files in the `C:/Users/<user>` directory.
 
 # [Visual Studio Code](#tab/visual-studio-code)
+
+Change the connection string to point to a SQLite database file named *CU.db*:
+
+[!code-json[Main](intro/samples/cu30/appsettingsSQLite.json?highlight=11)]
+
+# [Visual Studio for Mac](#tab/visual-studio-mac)
 
 Change the connection string to point to a SQLite database file named *CU.db*:
 
@@ -327,6 +393,12 @@ The scaffolding tool automatically registered the context class with the depende
 
   [!code-csharp[Main](intro/samples/cu30/StartupSQLite.cs?name=snippet_ConfigureServices&highlight=5-6)]
 
+# [Visual Studio for Mac](#tab/visual-studio-mac)
+
+* In `ConfigureServices`, make sure the code added by the scaffolder calls `UseSqlite`.
+
+  [!code-csharp[Main](intro/samples/cu30/StartupSQLite.cs?name=snippet_ConfigureServices&highlight=5-6)]
+  
 ---
 
 The name of the connection string is passed in to the context by calling a method on a [DbContextOptions](/dotnet/api/microsoft.entityframeworkcore.dbcontextoptions) object. For local development, the [ASP.NET Core configuration system](xref:fundamentals/configuration/index) reads the connection string from the *appsettings.json* file.
@@ -383,6 +455,10 @@ Drop-Database
 
 * Stop the app if it's running, and delete the *CU.db* file.
 
+# [Visual Studio for Mac](#tab/visual-studio-mac)
+
+* Stop the app if it's running, and delete the *CU.db* file.
+
 ---
 
 * Restart the app.
@@ -400,6 +476,10 @@ Drop-Database
 * Right-click the **Student** table and click **View Code** to see how the `Student` model maps to the `Student` table schema.
 
 # [Visual Studio Code](#tab/visual-studio-code)
+
+Use your SQLite tool to view the database schema and seeded data. The database file is named *CU.db* and is located in the project folder.
+
+# [Visual Studio for Mac](#tab/visual-studio-mac)
 
 Use your SQLite tool to view the database schema and seeded data. The database file is named *CU.db* and is located in the project folder.
 
